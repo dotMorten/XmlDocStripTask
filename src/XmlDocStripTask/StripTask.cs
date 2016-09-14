@@ -11,7 +11,6 @@ namespace XmlDocStripTask
 {
     public class StripTask : Task
     {
-
         [Required]
         public string XmlDocumentationFilename { get; set; }
 
@@ -46,11 +45,6 @@ namespace XmlDocStripTask
             return true;
         }
 
-        private static bool IsPublicOrProtected(MethodDefinition m)
-        {
-            return m.IsPublic || m.IsFamily || m.IsFamilyOrAssembly;
-        }
-
         private static void Strip(string xmlDoc, string assemblyName, string outFilename)
         {
             var xmldoc = new System.Xml.XmlDocument();
@@ -60,20 +54,20 @@ namespace XmlDocStripTask
             {
                 //Build map of all public members
                 var publicTypes = new Dictionary<string, MemberReference>();
-                foreach (var item in module.GetTypes().Where(t => t.IsPublic))
+                foreach (var item in module.GetTypes().Where(t => IsPublicApi(t)))
                 {
                     publicTypes.Add(DocCommentId.GetDocCommentId(item), item);
-                    foreach (var m in item.Methods.Where(m => IsPublicOrProtected(m)))
+                    foreach (var m in item.Methods.Where(m => IsPublicApi(m)))
                     {   
                         publicTypes.Add(DocCommentId.GetDocCommentId(m), m);
                     }
                     foreach (var p in item.Properties.Where( m => 
-                        m.GetMethod != null && IsPublicOrProtected(m.GetMethod) || 
-                        m.SetMethod != null && IsPublicOrProtected(m.SetMethod)))
+                        m.GetMethod != null && IsPublicApi(m.GetMethod) || 
+                        m.SetMethod != null && IsPublicApi(m.SetMethod)))
                     {
                         publicTypes.Add(DocCommentId.GetDocCommentId(p), p);
                     }
-                    foreach (var e in item.Events.Where(m => m.AddMethod != null && IsPublicOrProtected(m.AddMethod) || m.RemoveMethod != null && IsPublicOrProtected(m.RemoveMethod)))
+                    foreach (var e in item.Events.Where(m => m.AddMethod != null && IsPublicApi(m.AddMethod) || m.RemoveMethod != null && IsPublicApi(m.RemoveMethod)))
                     {
                         publicTypes.Add(DocCommentId.GetDocCommentId(e), e);
                     }
@@ -121,6 +115,18 @@ namespace XmlDocStripTask
             {
                 xmldoc.Save(writer);
             }
+        }
+
+        private static bool IsPublicApi(TypeDefinition type)
+        {
+            return type.IsNested ?
+                type.IsNestedPublic || type.IsNestedFamily || type.IsNestedFamilyOrAssembly :
+                type.IsPublic;
+        }
+
+        private static bool IsPublicApi(MethodDefinition m)
+        {
+            return m.IsPublic || m.IsFamily || m.IsFamilyOrAssembly;
         }
     }
 }
