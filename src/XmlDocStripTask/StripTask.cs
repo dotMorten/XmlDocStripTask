@@ -63,19 +63,21 @@ namespace XmlDocStripTask
                 foreach (var item in module.GetTypes().Where(t => t.IsPublic))
                 {
                     publicTypes.Add(DocCommentId.GetDocCommentId(item), item);
-                    foreach (var m in item.Methods.Where(m => m.IsPublic))
-                    {
+                    foreach (var m in item.Methods.Where(m => IsPublicOrProtected(m)))
+                    {   
                         publicTypes.Add(DocCommentId.GetDocCommentId(m), m);
                     }
-                    foreach (var p in item.Properties.Where(m => m.GetMethod != null && m.GetMethod.IsPublic || m.SetMethod != null && m.SetMethod.IsPublic))
+                    foreach (var p in item.Properties.Where( m => 
+                        m.GetMethod != null && IsPublicOrProtected(m.GetMethod) || 
+                        m.SetMethod != null && IsPublicOrProtected(m.SetMethod)))
                     {
                         publicTypes.Add(DocCommentId.GetDocCommentId(p), p);
                     }
-                    foreach (var e in item.Events.Where(m => m.AddMethod != null && m.AddMethod.IsPublic || m.RemoveMethod != null && m.RemoveMethod.IsPublic))
+                    foreach (var e in item.Events.Where(m => m.AddMethod != null && IsPublicOrProtected(m.AddMethod) || m.RemoveMethod != null && IsPublicOrProtected(m.RemoveMethod)))
                     {
                         publicTypes.Add(DocCommentId.GetDocCommentId(e), e);
                     }
-                    foreach (var f in item.Fields.Where(m => m.IsPublic))
+                    foreach (var f in item.Fields.Where(m => m.IsPublic || m.IsFamily || m.IsFamilyOrAssembly))
                     {
                         publicTypes.Add(DocCommentId.GetDocCommentId(f), f);
                     }
