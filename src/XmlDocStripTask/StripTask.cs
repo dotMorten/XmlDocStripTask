@@ -20,31 +20,39 @@ namespace XmlDocStripTask
 
         public override bool Execute()
         {
+            base.Log.LogMessage(MessageImportance.High, "Optimizing XML documentation...");
             if (!File.Exists(XmlDocumentationFilename))
+            {
+                base.Log.LogWarning("XML documentation file not found: " + XmlDocumentationFilename);
                 return true;
+            }
             if (!File.Exists(AssemblyFilename))
+            {
+                base.Log.LogWarning("Assembly not found: " + AssemblyFilename);
                 return true;
+            }
 
             FileInfo fi = new FileInfo(XmlDocumentationFilename);
             string outFilename = fi.FullName.Replace(fi.Extension, ".intellisense" + fi.Extension);
             try
             {
                 Strip(XmlDocumentationFilename, AssemblyFilename, outFilename);
+                base.Log.LogMessage(MessageImportance.High, "XML documentation optimization complete.");
             }
             catch(System.Exception ex)
             {
-                base.Log.LogWarning("XML Documentation stripping failed with error: " + ex.Message);
+                base.Log.LogWarning("XML documentation stripping failed with error: " + ex.Message);
             }
             return true;
         }
 
+        private static bool IsPublicOrProtected(MethodDefinition m)
+        {
+            return m.IsPublic || m.IsFamily || m.IsFamilyOrAssembly;
+        }
 
         private static void Strip(string xmlDoc, string assemblyName, string outFilename)
         {
-            //  string xmlDoc = args[1];
-            //  string assemblyName = args[2];
-            //  string outFilename = args[3];
-
             var xmldoc = new System.Xml.XmlDocument();
             xmldoc.Load(xmlDoc);
 
