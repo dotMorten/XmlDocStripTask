@@ -13,6 +13,16 @@ Add the following to your project file, and you're done:
   </ItemGroup>
 ```
 
+### Optional settings:
+```xml
+  <PropertyGroup>
+     <!-- Don't overwrite the xml doc but write the stripped version to a different file -->
+    <XmlDocStripOutputPath>PathToStrippedFile.xml</XmlDocStripOutputPath>
+    <!-- Don't strip remarks -->
+    <PreserveXmlRemarks>true</PreserveXmlRemarks>
+  </PropertyGroup>
+```
+
 #### Nuget Package:
 
 https://www.nuget.org/packages/dotMorten.XmlDocStripTask
