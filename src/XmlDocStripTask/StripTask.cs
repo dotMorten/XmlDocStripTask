@@ -20,17 +20,17 @@ namespace XmlDocStripTask
 
         public override bool Execute()
         {
-            base.Log.LogMessage(MessageImportance.High, "Optimizing XML documentation...");
             var assemblyFileInfo = new FileInfo(AssemblyFilename);
             string XmlDocumentationFilename = assemblyFileInfo.FullName.Substring(0, assemblyFileInfo.FullName.Length - assemblyFileInfo.Extension.Length) + ".xml";
+            base.Log.LogMessage(MessageImportance.High, $"Optimizing XML Documentation '{XmlDocumentationFilename}' for assembly '{AssemblyFilename}'");
             if (!File.Exists(XmlDocumentationFilename))
             {
-                base.Log.LogWarning("XML documentation file not found: " + XmlDocumentationFilename);
+                base.Log.LogWarning("XMLStrip", "XMLStrip0001", null, null, 0, 0, 0, 0, "XML documentation file not found: " + XmlDocumentationFilename);
                 return true;
             }
             if (!File.Exists(AssemblyFilename))
             {
-                base.Log.LogWarning("Assembly not found: " + AssemblyFilename);
+                base.Log.LogWarning("XMLStrip", "XMLStrip0002", null, null, 0, 0, 0, 0, "Assembly not found: " + AssemblyFilename);
                 return true;
             }
             FileInfo fi = new FileInfo(XmlDocumentationFilename);
@@ -39,7 +39,6 @@ namespace XmlDocStripTask
                 outFilename = XmlDocumentationFilename;
             try
             {
-                base.Log.LogMessage(MessageImportance.High, $"Stripping XML Documentation '{XmlDocumentationFilename}' for assembly '{AssemblyFilename}'");
                 var oldFileLength = new FileInfo(XmlDocumentationFilename).Length;
                 Strip(XmlDocumentationFilename, AssemblyFilename, outFilename);
                 var newFileLength = new FileInfo(outFilename).Length;
@@ -47,7 +46,7 @@ namespace XmlDocStripTask
             }
             catch(System.Exception ex)
             {
-                base.Log.LogWarning("XML documentation stripping failed with error: " + ex.Message);
+                base.Log.LogWarning("XMLStrip", "XMLStrip0003", null, null, 0, 0, 0, 0, "XML documentation stripping failed with error: " + ex.Message);
             }
             return true;
         }
