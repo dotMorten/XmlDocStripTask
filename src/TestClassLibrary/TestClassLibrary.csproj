@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;netstandard2.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+    <Import Project="..\XmlDocStripTask\bin\$(Configuration)\netstandard2.0\build\dotMorten.XmlDocStripTask.targets" />
+</Project>

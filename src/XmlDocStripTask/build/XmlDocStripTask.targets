@@ -1,0 +1,13 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--<PropertyGroup>
+    <BuildDependsOn>$(BuildDependsOn);StripXmlDoc</BuildDependsOn>
+  </PropertyGroup>-->
+
+  <UsingTask TaskName="StripTask" AssemblyFile="$(MSBuildThisFileDirectory)..\tasks\netstandard2.0\XmlDocStripTask.dll"/>
+
+  <Target Name="StripXmlDoc" AfterTargets="Build" Condition="'$(GenerateDocumentationFile)'=='true' AND '$(TargetPath)'!=''">
+    <StripTask OutputPath="$(XmlDocStripOutputPath)" AssemblyFilename="$(TargetPath)" PreserveRemarks="$(PreserveXmlRemarks)" />
+  </Target>
+
+</Project>

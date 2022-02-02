@@ -12,14 +12,17 @@ namespace XmlDocStripTask
     public class StripTask : Task
     {
         [Required]
-        public string XmlDocumentationFilename { get; set; }
-
-        [Required]
         public string AssemblyFilename { get; set; }
+
+        public string OutputPath { get; set; }
+
+        public bool PreserveRemarks { get; set; } = false;
 
         public override bool Execute()
         {
             base.Log.LogMessage(MessageImportance.High, "Optimizing XML documentation...");
+            var assemblyFileInfo = new FileInfo(AssemblyFilename);
+            string XmlDocumentationFilename = assemblyFileInfo.FullName.Substring(0, assemblyFileInfo.FullName.Length - assemblyFileInfo.Extension.Length) + ".xml";
             if (!File.Exists(XmlDocumentationFilename))
             {
                 base.Log.LogWarning("XML documentation file not found: " + XmlDocumentationFilename);
@@ -30,13 +33,17 @@ namespace XmlDocStripTask
                 base.Log.LogWarning("Assembly not found: " + AssemblyFilename);
                 return true;
             }
-
             FileInfo fi = new FileInfo(XmlDocumentationFilename);
-            string outFilename = fi.FullName.Replace(fi.Extension, ".intellisense" + fi.Extension);
+            string outFilename = OutputPath;
+            if (string.IsNullOrEmpty(outFilename))
+                outFilename = XmlDocumentationFilename;
             try
             {
+                base.Log.LogMessage(MessageImportance.High, $"Stripping XML Documentation '{XmlDocumentationFilename}' for assembly '{AssemblyFilename}'");
+                var oldFileLength = new FileInfo(XmlDocumentationFilename).Length;
                 Strip(XmlDocumentationFilename, AssemblyFilename, outFilename);
-                base.Log.LogMessage(MessageImportance.High, "XML documentation optimization complete.");
+                var newFileLength = new FileInfo(outFilename).Length;
+                base.Log.LogMessage(MessageImportance.High, $"Reduced XML Documentation by {((1 - (newFileLength / (double)oldFileLength)) * 100).ToString("0.0")}% ({oldFileLength} bytes => {newFileLength} bytes)");
             }
             catch(System.Exception ex)
             {
@@ -45,11 +52,10 @@ namespace XmlDocStripTask
             return true;
         }
 
-        private static void Strip(string xmlDoc, string assemblyName, string outFilename)
+        private void Strip(string xmlDoc, string assemblyName, string outFilename)
         {
             var xmldoc = new System.Xml.XmlDocument();
             xmldoc.Load(xmlDoc);
-
             using (var module = Mono.Cecil.ModuleDefinition.ReadModule(assemblyName))
             {
                 //Build map of all public members
@@ -92,7 +98,7 @@ namespace XmlDocStripTask
                     foreach (var child in member.ChildNodes.OfType<XmlNode>().ToArray())
                     {
                         string name = child.Name;
-                        if (name == "summary" || name == "param" || name == "returns" || name == "exception" || name == "value")
+                        if (name == "summary" || name == "param" || name == "returns" || name == "exception" || name == "value" || (PreserveRemarks && name == "remarks"))
                         {
                             if (child.InnerText != null)
                             {
@@ -114,6 +120,7 @@ namespace XmlDocStripTask
             using (var writer = XmlWriter.Create(outFilename, settings))
             {
                 xmldoc.Save(writer);
+                writer.Flush();
             }
         }
 

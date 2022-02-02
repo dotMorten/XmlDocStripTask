@@ -1,4 +1,7 @@
-﻿using System;
+﻿#pragma warning disable CS0649
+#pragma warning disable CS0067
+#pragma warning disable CS0169
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -109,3 +112,6 @@ namespace TestClassLibrary.net45
         private int PrivateField;
     }
 }
+#pragma warning restore CS0067
+#pragma warning restore CS0169
+#pragma warning restore CS0649

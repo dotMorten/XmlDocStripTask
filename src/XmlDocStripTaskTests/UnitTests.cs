@@ -7,16 +7,16 @@ namespace XmlDocStripTaskTests
     public class UnitTests
     {
         [TestMethod]
-        public void TestMethod_Net45()
+        public void TestMethod_Net6()
         {
-            var txt = System.IO.File.ReadAllText(@"..\..\..\TestClassLibrary.net45\bin\TestClassLibrary.net45.intellisense.XML");
+            var txt = System.IO.File.ReadAllText(@"..\..\..\TestClassLibrary\bin\Debug\net6.0\TestClassLibrary.xml");
             Assert.IsFalse(txt.Contains("Exclude"));
         }
 
         [TestMethod]
-        public void TestMethod_UWP()
+        public void TestMethod_netstd()
         {
-            var txt = System.IO.File.ReadAllText(@"..\..\..\TestClassLibrary.UWP\bin\TestClassLibrary.UWP.intellisense.XML");
+            var txt = System.IO.File.ReadAllText(@"..\..\..\TestClassLibrary\bin\Debug\netstandard2.0\TestClassLibrary.xml");
             Assert.IsFalse(txt.Contains("Exclude"));
         }
     }
