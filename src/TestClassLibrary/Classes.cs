@@ -16,6 +16,11 @@ namespace TestClassLibrary.net45
         /// <summary>Include</summary>
         /// <remarks>Exclude</remarks>
         int MyProperty { get; }
+
+#pragma warning disable CS1570
+        /// <summary>Badly <td> formed XML</summary>
+        int BadlyFormedXml { get; }
+#pragma warning restore CS1570
     }
 
     /// <summary>Exclude</summary>

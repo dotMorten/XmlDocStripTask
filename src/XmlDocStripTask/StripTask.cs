@@ -85,6 +85,10 @@ namespace XmlDocStripTask
 
                 var membersNode = xmldoc.DocumentElement.SelectSingleNode("members");
                 var members = membersNode.SelectNodes("member");
+                foreach (var comment in membersNode.OfType<System.Xml.XmlComment>().ToArray())
+                {
+                    membersNode.RemoveChild(comment);
+                }
                 foreach (var member in members.OfType<System.Xml.XmlNode>().ToArray())
                 {
                     var docCommentId = member.Attributes["name"].Value;
