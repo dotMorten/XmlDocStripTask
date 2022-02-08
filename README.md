@@ -9,7 +9,7 @@ Add the following to your project file, and you're done:
 ```xml
 
   <ItemGroup>
-      <PackageReference Include="dotMorten.XmlDocStripTask" PrivateAssets="all" Version="1.1.0" />
+      <PackageReference Include="dotMorten.XmlDocStripTask" PrivateAssets="all" Version="1.1.1" />
   </ItemGroup>
 ```
 
