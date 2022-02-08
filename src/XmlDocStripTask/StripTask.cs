@@ -16,7 +16,7 @@ namespace XmlDocStripTask
 
         public string OutputPath { get; set; }
 
-        public bool PreserveRemarks { get; set; } = false;
+        public bool RemoveRemarks { get; set; } = false;
 
         public override bool Execute()
         {
@@ -101,7 +101,7 @@ namespace XmlDocStripTask
                     foreach (var child in member.ChildNodes.OfType<XmlNode>().ToArray())
                     {
                         string name = child.Name;
-                        if (name == "summary" || name == "param" || name == "returns" || name == "exception" || name == "value" || (PreserveRemarks && name == "remarks"))
+                        if (name == "summary" || name == "param" || name == "returns" || name == "exception" || name == "value" || (!RemoveRemarks && name == "remarks"))
                         {
                             if (child.InnerText != null)
                             {

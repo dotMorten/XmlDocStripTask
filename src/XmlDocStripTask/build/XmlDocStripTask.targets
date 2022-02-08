@@ -3,7 +3,7 @@
   <UsingTask TaskName="StripTask" AssemblyFile="$(MSBuildThisFileDirectory)..\tasks\netstandard2.0\XmlDocStripTask.dll"/>
 
   <Target Name="StripXmlDoc" AfterTargets="Build" Condition="'$(GenerateDocumentationFile)'=='true' AND '$(TargetPath)'!=''">
-    <StripTask OutputPath="$(XmlDocStripOutputPath)" AssemblyFilename="$(TargetPath)" PreserveRemarks="$(PreserveXmlRemarks)" />
+    <StripTask OutputPath="$(XmlDocStripOutputPath)" AssemblyFilename="$(TargetPath)" RemoveRemarks="$(StripXmlRemarks)" />
   </Target>
 
 </Project>
