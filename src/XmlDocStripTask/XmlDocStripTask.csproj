@@ -9,7 +9,7 @@
     <PackageProjectUrl>https://github.com/dotMorten/XmlDocStripTask</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dotMorten/XmlDocStripTask</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
     <Description>Optimizes your xml documentation for intellisense by stripping out internal documentation and remarks.</Description>
